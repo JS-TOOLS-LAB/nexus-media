@@ -11,7 +11,7 @@
     <a href="https://github.com/JS-TOOLS-LAB/nexus-media"><img src="https://img.shields.io/badge/Express-4.21-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" /></a>
     <a href="https://github.com/JS-TOOLS-LAB/nexus-media"><img src="https://img.shields.io/badge/Tailwind_CSS-4.1-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
     <a href="https://github.com/JS-TOOLS-LAB/nexus-media"><img src="https://img.shields.io/badge/Vite-6.2-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" /></a>
-    <a href="https://github.com/JS-TOOLS-LAB/nexus-media/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License: MIT" /></a>
+    <a href="https://github.com/JS-TOOLS-LAB/nexus-media/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge" alt="License: MIT" /></a>
     <a href="https://github.com/JS-TOOLS-LAB/nexus-media/pulls"><img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=for-the-badge" alt="PRs Welcome" /></a>
   </p>
 
