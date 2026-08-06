@@ -1,0 +1,6 @@
+{
+  "name": "Media Explorer",
+  "description": "File browser with media player, session authentication, file tree navigation, media streaming, and ZIP downloads.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= appName %> - Media Explorer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="app-body">
+  <!-- CSRF Meta Tag -->
+  <meta name="csrf-token" content="<%= csrfToken %>" />
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <button id="toggle-sidebar-btn" class="icon-btn mobile-only" title="Toggle Sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="app-brand">
+        <div class="brand-icon-wrapper">
+          <i class="fa-solid fa-folder-closed"></i>
+        </div>
+        <span class="brand-title"><%= appName %><span class="brand-title-accent">.ts</span></span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button id="theme-toggle-btn" class="icon-btn" title="Toggle Light/Dark Theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      
+      <div class="user-profile">
+        <i class="fa-solid fa-circle-user"></i>
+        <span class="username"><%= user ? user.username : 'Guest' %></span>
+      </div>
+
+      <a href="/logout" class="btn btn-outline btn-sm" title="Log Out">
+        <i class="fa-solid fa-right-from-bracket"></i> <span class="desktop-only">Logout</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Explorer Layout -->
+  <div class="explorer-container">
+    <!-- Sidebar Tree Navigation -->
+    <aside class="explorer-sidebar" id="explorer-sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title"><i class="fa-solid fa-sitemap"></i> Directory Tree</span>
+        <button id="refresh-tree-btn" class="icon-btn icon-btn-sm" title="Refresh Tree">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+      </div>
+      <div class="sidebar-tree" id="file-tree-container">
+        <div class="tree-skeleton">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <div class="storage-card">
+          <div class="storage-card-header">
+            <span class="storage-title">Storage</span>
+            <span class="storage-percent">72%</span>
+          </div>
+          <div class="storage-bar-bg">
+            <div class="storage-bar-fill"></div>
+          </div>
+          <div class="storage-subtext">Media Storage Active</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="explorer-main">
+      <!-- Toolbar -->
+      <div class="explorer-toolbar">
+        <div class="toolbar-group">
+          <button id="btn-back" class="icon-btn" title="Back" disabled>
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <button id="btn-forward" class="icon-btn" title="Forward" disabled>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+          <button id="btn-refresh" class="icon-btn" title="Refresh Folder">
+            <i class="fa-solid fa-rotate"></i>
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="search-input" placeholder="Search files and folders..." autocomplete="off" />
+          <button id="clear-search-btn" class="icon-btn icon-btn-sm hidden">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="toolbar-group">
+          <!-- View Mode Toggle -->
+          <button id="btn-view-grid" class="icon-btn active" title="Grid View">
+            <i class="fa-solid fa-border-all"></i>
+          </button>
+          <button id="btn-view-list" class="icon-btn" title="List View">
+            <i class="fa-solid fa-list"></i>
+          </button>
+
+          <!-- Bulk Actions -->
+          <button id="btn-download-selected" class="btn btn-primary btn-sm hidden" title="Download Selected as ZIP">
+            <i class="fa-solid fa-file-zipper"></i> Download (<span id="selected-count">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Breadcrumb Navigation -->
+      <nav class="breadcrumb-bar" id="breadcrumb-container" aria-label="Breadcrumb">
+        <span class="breadcrumb-item active"><i class="fa-solid fa-house"></i> Root</span>
+      </nav>
+
+      <!-- Selection Info Bar -->
+      <div class="selection-bar hidden" id="selection-bar">
+        <div class="selection-info">
+          <input type="checkbox" id="select-all-checkbox" />
+          <label for="select-all-checkbox">Select All</label>
+          <span id="selection-text">0 items selected</span>
+        </div>
+        <button id="clear-selection-btn" class="btn btn-text btn-sm">Clear Selection</button>
+      </div>
+
+      <!-- File Grid / List Container -->
+      <div class="file-view grid-view" id="file-view-container">
+        <!-- Content dynamically injected here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Audio Player Floating Bar -->
+  <div class="audio-player-bar hidden" id="audio-player-bar">
+    <div class="audio-info">
+      <div class="audio-icon-box"><i class="fa-solid fa-music"></i></div>
+      <div class="audio-text">
+        <span class="audio-title" id="audio-title">No Audio Loaded</span>
+        <span class="audio-sub" id="audio-sub">-</span>
+      </div>
+    </div>
+
+    <div class="audio-controls-center">
+      <div class="audio-buttons">
+        <button id="audio-btn-prev" class="audio-btn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
+        <button id="audio-btn-play" class="audio-btn audio-btn-main" title="Play/Pause"><i class="fa-solid fa-play"></i></button>
+        <button id="audio-btn-next" class="audio-btn" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+      </div>
+      <div class="audio-progress-container">
+        <span class="time-display" id="audio-time-current">00:00</span>
+        <input type="range" id="audio-progress" min="0" max="100" value="0" />
+        <span class="time-display" id="audio-time-duration">00:00</span>
+      </div>
+    </div>
+
+    <div class="audio-controls-right">
+      <button id="audio-btn-mute" class="audio-btn" title="Mute/Unmute"><i class="fa-solid fa-volume-high"></i></button>
+      <input type="range" id="audio-volume" min="0" max="1" step="0.05" value="1" />
+      <button id="audio-btn-close" class="audio-btn" title="Close Player"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <audio id="html5-audio-element" class="hidden"></audio>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="modal hidden" id="video-modal">
+    <div class="modal-backdrop" id="video-modal-backdrop"></div>
+    <div class="modal-content video-modal-content">
+      <div class="modal-header">
+        <h3 id="video-modal-title"><i class="fa-solid fa-video"></i> Video Player</h3>
+        <button class="icon-btn modal-close-btn" id="close-video-modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body video-container">
+        <video id="html5-video-element" controls playsinline>
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Modal Viewer -->
+  <div class="modal hidden" id="image-modal">
+    <div class="modal-backdrop" id="image-modal-backdrop"></div>
+    <div class="modal-content image-modal-content">
+      <div class="modal-header">
+        <h3 id="image-modal-title"><i class="fa-solid fa-image"></i> Image Viewer</h3>
+        <div class="modal-actions">
+          <a id="image-download-link" href="#" download class="icon-btn" title="Download Image">
+            <i class="fa-solid fa-download"></i>
+          </a>
+          <button class="icon-btn modal-close-btn" id="close-image-modal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <div class="modal-body image-container">
+        <button id="image-btn-prev" class="image-nav-btn prev-btn" title="Previous Image"><i class="fa-solid fa-chevron-left"></i></button>
+        <img id="image-modal-img" src="" alt="Preview" />
+        <button id="image-btn-next" class="image-nav-btn next-btn" title="Next Image"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- App Script -->
+  <script src="/js/app.js"></script>
+</body>
+</html>
